@@ -1,4 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -16,11 +16,11 @@ namespace IdentityServer4.IntegrationTests.Endpoints.Authorize
 {
     public class RestrictAccessTokenViaBrowserTests
     {
-        const string Category = "RestrictAccessTokenViaBrowserTests";
+        private const string Category = "RestrictAccessTokenViaBrowserTests";
 
-        IdentityServerPipeline _mockPipeline = new IdentityServerPipeline();
+        private IdentityServerPipeline _mockPipeline = new IdentityServerPipeline();
 
-        ClaimsPrincipal _user = IdentityServerPrincipal.Create("bob", "Bob Loblaw");
+        private ClaimsPrincipal _user = new IdentityServerUser("bob").CreatePrincipal();
 
         public RestrictAccessTokenViaBrowserTests()
         {
@@ -47,6 +47,7 @@ namespace IdentityServer4.IntegrationTests.Endpoints.Authorize
                 {
                     ClientId = "client3",
                     AllowedGrantTypes = GrantTypes.Hybrid,
+                    ClientSecrets = { new Secret("secret".Sha256()) },
                     RequireConsent = false,
                     AllowedScopes = new List<string> { "openid" },
                     RedirectUris = new List<string> { "https://client3/callback" },
@@ -56,6 +57,7 @@ namespace IdentityServer4.IntegrationTests.Endpoints.Authorize
                 {
                     ClientId = "client4",
                     AllowedGrantTypes = GrantTypes.Hybrid,
+                    ClientSecrets = { new Secret("secret".Sha256()) },
                     RequireConsent = false,
                     AllowedScopes = new List<string> { "openid" },
                     RedirectUris = new List<string> { "https://client4/callback" },

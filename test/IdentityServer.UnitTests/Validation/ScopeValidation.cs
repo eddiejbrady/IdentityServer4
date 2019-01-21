@@ -1,4 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -14,9 +14,9 @@ namespace IdentityServer4.UnitTests.Validation
 {
     public class ScopeValidation
     {
-        const string Category = "Scope Validation";
+        private const string Category = "Scope Validation";
 
-        List<IdentityResource> _identityResources = new List<IdentityResource>
+        private List<IdentityResource> _identityResources = new List<IdentityResource>
         {
             new IdentityResource
             {
@@ -29,7 +29,7 @@ namespace IdentityServer4.UnitTests.Validation
             }
         };
 
-        List<ApiResource> _apiResources = new List<ApiResource>
+        private List<ApiResource> _apiResources = new List<ApiResource>
         {
             new ApiResource
             {
@@ -61,7 +61,7 @@ namespace IdentityServer4.UnitTests.Validation
             }
         };
 
-        Client _restrictedClient = new Client
+        private Client _restrictedClient = new Client
         {
             ClientId = "restricted",
 
@@ -73,7 +73,7 @@ namespace IdentityServer4.UnitTests.Validation
                 }
         };
 
-        IResourceStore _store;
+        private IResourceStore _store;
 
         public ScopeValidation()
         {
@@ -84,7 +84,7 @@ namespace IdentityServer4.UnitTests.Validation
         [Trait("Category", Category)]
         public void Parse_Scopes_with_Empty_Scope_List()
         {
-            var scopes = "".ParseScopesString();
+            var scopes = string.Empty.ParseScopesString();
 
             scopes.Should().BeNull();
         }

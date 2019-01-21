@@ -20,14 +20,18 @@ namespace IdentityServer4.IntegrationTests.Pipeline
 {
     public class FederatedSignoutTests
     {
-        const string Category = "Federated Signout";
+        private const string Category = "Federated Signout";
 
-        IdentityServerPipeline _pipeline = new IdentityServerPipeline();
-        ClaimsPrincipal _user;
+        private IdentityServerPipeline _pipeline = new IdentityServerPipeline();
+        private ClaimsPrincipal _user;
 
         public FederatedSignoutTests()
         {
-            _user = IdentityServerPrincipal.Create("bob", "bob", new Claim(JwtClaimTypes.SessionId, "123"));
+            _user = new IdentityServerUser("bob")
+            {
+                AdditionalClaims = { new Claim(JwtClaimTypes.SessionId, "123") }
+            }.CreatePrincipal();
+
             _pipeline = new IdentityServerPipeline();
 
             _pipeline.IdentityScopes.AddRange(new IdentityResource[] {

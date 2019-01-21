@@ -17,9 +17,9 @@ namespace IdentityServer4.IntegrationTests.Conformance.Basic
 {
     public class ResponseTypeResponseModeTests
     {
-        const string Category = "Conformance.Basic.ResponseTypeResponseModeTests";
+        private const string Category = "Conformance.Basic.ResponseTypeResponseModeTests";
 
-        IdentityServerPipeline _mockPipeline = new IdentityServerPipeline();
+        private IdentityServerPipeline _mockPipeline = new IdentityServerPipeline();
 
         public ResponseTypeResponseModeTests()
         {
@@ -65,7 +65,7 @@ namespace IdentityServer4.IntegrationTests.Conformance.Basic
         {
             await _mockPipeline.LoginAsync("bob");
 
-            var metadata = await _mockPipeline.Client.GetAsync(IdentityServerPipeline.DiscoveryEndpoint);
+            var metadata = await _mockPipeline.BackChannelClient.GetAsync(IdentityServerPipeline.DiscoveryEndpoint);
             metadata.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var state = Guid.NewGuid().ToString();

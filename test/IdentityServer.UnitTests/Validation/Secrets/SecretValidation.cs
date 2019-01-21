@@ -7,26 +7,26 @@ using IdentityServer4.Models;
 using IdentityServer4.Stores;
 using IdentityServer4.Validation;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Threading.Tasks;
 using Xunit;
 using IdentityServer4.Configuration;
+using IdentityServer.UnitTests.Common;
 
 namespace IdentityServer4.UnitTests.Validation.Secrets
 {
     public class SecretValidation
     {
-        const string Category = "Secrets - Secret Validator";
+        private const string Category = "Secrets - Secret Validator";
 
-        ISecretValidator _hashedSecretValidator = new HashedSharedSecretValidator(new Logger<HashedSharedSecretValidator>(new LoggerFactory()));
-        IClientStore _clients = new InMemoryClientStore(ClientValidationTestClients.Get());
-        SecretValidator _validator;
-        IdentityServerOptions _options = new IdentityServerOptions();
+        private ISecretValidator _hashedSecretValidator = new HashedSharedSecretValidator(new Logger<HashedSharedSecretValidator>(new LoggerFactory()));
+        private IClientStore _clients = new InMemoryClientStore(ClientValidationTestClients.Get());
+        private SecretValidator _validator;
+        private IdentityServerOptions _options = new IdentityServerOptions();
 
         public SecretValidation()
         {
             _validator = new SecretValidator(
-                _options,
+                new StubClock(),
                 new[] { _hashedSecretValidator }, 
                 new Logger<SecretValidator>(new LoggerFactory()));
         }
@@ -156,7 +156,7 @@ namespace IdentityServer4.UnitTests.Validation.Secrets
 
         [Fact]
         [Trait("Category", Category)]
-        public async Task Client_with_no_Secret_Should_Throw()
+        public async Task Client_with_no_Secret_Should_Fail()
         {
             var clientId = "no_secret_client";
             var client = await _clients.FindEnabledClientByIdAsync(clientId);
@@ -167,9 +167,8 @@ namespace IdentityServer4.UnitTests.Validation.Secrets
                 Type = IdentityServerConstants.ParsedSecretTypes.SharedSecret
             };
             
-            Func<Task> act = () => _validator.ValidateAsync(secret, client.ClientSecrets);
-
-            act.ShouldThrow<ArgumentException>();
+            var result = await _validator.ValidateAsync(secret, client.ClientSecrets);
+            result.Success.Should().BeFalse();
         }
     }
 }

@@ -18,14 +18,14 @@ namespace IdentityServer4.UnitTests.ResponseHandling
 {
     public class UserInfoResponseGeneratorTests
     {
-        UserInfoResponseGenerator _subject;
-        MockProfileService _mockProfileService = new MockProfileService();
-        ClaimsPrincipal _user;
-        Client _client;
+        private UserInfoResponseGenerator _subject;
+        private MockProfileService _mockProfileService = new MockProfileService();
+        private ClaimsPrincipal _user;
+        private Client _client;
 
-        InMemoryResourcesStore _resourceStore;
-        List<IdentityResource> _identityResources = new List<IdentityResource>();
-        List<ApiResource> _apiResources = new List<ApiResource>();
+        private InMemoryResourcesStore _resourceStore;
+        private List<IdentityResource> _identityResources = new List<IdentityResource>();
+        private List<ApiResource> _apiResources = new List<ApiResource>();
 
         public UserInfoResponseGeneratorTests()
         {
@@ -34,13 +34,16 @@ namespace IdentityServer4.UnitTests.ResponseHandling
                 ClientId = "client"
             };
 
-            _user = IdentityServerPrincipal.Create("bob", "bob", new Claim[]
+            _user = new IdentityServerUser("bob")
             {
-                new Claim("foo", "foo1"),
-                new Claim("foo", "foo2"),
-                new Claim("bar", "bar1"),
-                new Claim("bar", "bar2")
-            });
+                AdditionalClaims =
+                {
+                    new Claim("foo", "foo1"),
+                    new Claim("foo", "foo2"),
+                    new Claim("bar", "bar1"),
+                    new Claim("bar", "bar2")
+                }
+            }.CreatePrincipal();
 
             _resourceStore = new InMemoryResourcesStore(_identityResources, _apiResources);
             _subject = new UserInfoResponseGenerator(_mockProfileService, _resourceStore, TestLogger.Create<UserInfoResponseGenerator>());
@@ -188,7 +191,7 @@ namespace IdentityServer4.UnitTests.ResponseHandling
 
             Func<Task> act = () => _subject.ProcessAsync(result);
 
-            act.ShouldThrow<InvalidOperationException>()
+            act.Should().Throw<InvalidOperationException>()
                 .And.Message.Should().Contain("subject");
         }
 

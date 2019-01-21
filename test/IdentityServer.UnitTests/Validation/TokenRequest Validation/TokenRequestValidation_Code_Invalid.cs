@@ -1,4 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -19,10 +19,10 @@ namespace IdentityServer4.UnitTests.Validation.TokenRequest
 {
     public class TokenRequestValidation_Code_Invalid
     {
-        IClientStore _clients = Factory.CreateClientStore();
-        const string Category = "TokenRequest Validation - AuthorizationCode - Invalid";
+        private IClientStore _clients = Factory.CreateClientStore();
+        private const string Category = "TokenRequest Validation - AuthorizationCode - Invalid";
 
-        ClaimsPrincipal _subject = IdentityServerPrincipal.Create("bob", "Bob Loblaw");
+        private ClaimsPrincipal _subject = new IdentityServerUser("bob").CreatePrincipal();
 
         [Fact]
         [Trait("Category", Category)]
@@ -332,7 +332,7 @@ namespace IdentityServer4.UnitTests.Validation.TokenRequest
             var code = new AuthorizationCode
             {
                 CreationTime = DateTime.UtcNow,
-                Subject = IdentityServerPrincipal.Create("123", "bob"),
+                Subject = new IdentityServerUser("123").CreatePrincipal(),
                 ClientId = client.ClientId,
                 Lifetime = client.AuthorizationCodeLifetime,
                 IsOpenId = true,
@@ -380,7 +380,7 @@ namespace IdentityServer4.UnitTests.Validation.TokenRequest
                 CreationTime = DateTime.UtcNow,
                 ClientId = client.ClientId,
                 Lifetime = client.AuthorizationCodeLifetime,
-                Subject = IdentityServerPrincipal.Create("123", "bob"),
+                Subject = new IdentityServerUser("123").CreatePrincipal(),
                 RedirectUri = "https://server/cb",
                 RequestedScopes = new List<string>
                 {

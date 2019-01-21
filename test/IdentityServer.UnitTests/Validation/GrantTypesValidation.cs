@@ -6,12 +6,21 @@ using FluentAssertions;
 using IdentityServer4.Models;
 using System;
 using Xunit;
+using System.Collections.Generic;
 
 namespace IdentityServer4.UnitTests.Validation
 {
     public class GrantTypesValidation
     {
-        const string Category = "Grant Types Validation";
+        private const string Category = "Grant Types Validation";
+
+        [Fact]
+        [Trait("Category", Category)]
+        public void empty_should_be_allowed()
+        {
+            var client = new Client();
+            client.AllowedGrantTypes = new List<string>();
+        }
 
         [Fact]
         [Trait("Category", Category)]
@@ -48,7 +57,7 @@ namespace IdentityServer4.UnitTests.Validation
 
             Action act = () => client.AllowedGrantTypes = new[] { type1, type2 };
 
-            act.ShouldThrow<InvalidOperationException>();            
+            act.Should().Throw<InvalidOperationException>();            
         }
 
         [Theory]
@@ -62,7 +71,7 @@ namespace IdentityServer4.UnitTests.Validation
 
             Action act = () => client.AllowedGrantTypes = new[] { "custom1", type2, "custom2", type1 };
 
-            act.ShouldThrow<InvalidOperationException>();
+            act.Should().Throw<InvalidOperationException>();
         }
 
         [Fact]
@@ -72,17 +81,17 @@ namespace IdentityServer4.UnitTests.Validation
 
             Action act = () => client.AllowedGrantTypes = new[] { "custom1", "custom2", "custom1" };
 
-            act.ShouldThrow<InvalidOperationException>();
+            act.Should().Throw<InvalidOperationException>();
         }
 
         [Fact]
-        public void empty_grant_type_list_should_throw_single()
+        public void null_grant_type_list_should_throw_single()
         {
             var client = new Client();
 
-            Action act = () => client.AllowedGrantTypes = new string[] { };
+            Action act = () => client.AllowedGrantTypes = null;
 
-            act.ShouldThrow<InvalidOperationException>();
+            act.Should().Throw<ArgumentNullException>();
         }
 
         [Fact]
@@ -92,7 +101,7 @@ namespace IdentityServer4.UnitTests.Validation
 
             Action act = () => client.AllowedGrantTypes = new[] { "custo m2" };
 
-            act.ShouldThrow<InvalidOperationException>();
+            act.Should().Throw<InvalidOperationException>();
         }
 
         [Fact]
@@ -102,7 +111,7 @@ namespace IdentityServer4.UnitTests.Validation
 
             Action act = () => client.AllowedGrantTypes = new[] { "custom1", "custo m2", "custom1" };
 
-            act.ShouldThrow<InvalidOperationException>();
+            act.Should().Throw<InvalidOperationException>();
         }
 
         [Fact]
@@ -115,7 +124,7 @@ namespace IdentityServer4.UnitTests.Validation
 
             Action act = () => client.AllowedGrantTypes.Add("authorization_code");
 
-            act.ShouldThrow<InvalidOperationException>();
+            act.Should().Throw<InvalidOperationException>();
         }
 
         [Fact]

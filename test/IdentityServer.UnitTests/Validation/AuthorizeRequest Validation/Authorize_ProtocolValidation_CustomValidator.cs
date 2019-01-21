@@ -14,10 +14,10 @@ namespace IdentityServer4.UnitTests.Validation.AuthorizeRequest
 {
     public class Authorize_ProtocolValidation_CustomValidator
     {
-        const string Category = "AuthorizeRequest Protocol Validation";
+        private const string Category = "AuthorizeRequest Protocol Validation";
 
-        StubAuthorizeRequestValidator _stubAuthorizeRequestValidator = new StubAuthorizeRequestValidator();
-        AuthorizeRequestValidator _subject;
+        private StubAuthorizeRequestValidator _stubAuthorizeRequestValidator = new StubAuthorizeRequestValidator();
+        private AuthorizeRequestValidator _subject;
 
         public Authorize_ProtocolValidation_CustomValidator()
         {
@@ -70,7 +70,7 @@ namespace IdentityServer4.UnitTests.Validation.AuthorizeRequest
         {
             WasCalled = true;
             Callback?.Invoke(context);
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
     }
 }
